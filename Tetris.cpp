@@ -1,5 +1,9 @@
 #include<iostream>
+#include<stdlib.h>
+#include<fstream>
 using namespace std;
+ifstream fin("Tetris.data.txt");
+ofstream fout("Tetris.output.txt");
 class Shape{
 	public:
 		Shape(char t,int id):type(t),index(id){};	
@@ -32,13 +36,20 @@ int** Build(int r,int c){
 }
 void Checklines(int **T,int r,int c){
     int k=r-1;
-	for(int i=r-1;i>=0;i--){
+	int i, j;
+	for(i=r-1;i>=0;i--){
 		int count=0;
-		for(int j=0;j<c;j++){
+		for(j=0;j<c;j++){
 			if(T[i][j]==1) count++;
 			T[k][j] = T[i][j];
 		}
 		if(count<c) k--;
+	}
+	if(i==-1){
+		for(k;k>=0;k--){
+			for(j=0;j<c;j++)
+				T[k][j] = 0;
+		}
 	}
 }
 int ShapeT(int**T,Shape b,int r,int c){
@@ -310,14 +321,15 @@ int ShapeO(int**T,Shape b,int r,int c){
 void ShowT(int **T,int r,int c){
 	for(int i=0;i<r;i++){
 		for(int j=0;j<c;j++){
-			cout << T[i][j] ;
+			fout << T[i][j] ;
 		}
-		cout << endl;
+		fout << endl;
 	}
+	fout.close();
 }
 int Move(int **T,Shape b,int r,int c){
 	int p,success=-1;
-	cin >> p ; b.setposition(p);
+	fin >> p ; b.setposition(p);
 	switch(b.gettype()){
 		case('T'):
 			success = ShapeT(T,b,r,c);	break;
@@ -339,13 +351,21 @@ int Move(int **T,Shape b,int r,int c){
 	return success;	
 }
 int main(){
+	if(!fin){ //check file
+		cout << "Filein error!";
+		exit(1);
+	}
+	if(!fout){
+		cout << "Fileout error!";
+		exit(1);
+	}
 	int m,n,success=-1;
-	cin >> m >> n ;     //row,column
+	fin >> m >> n ;     //row,column
     int **T = Build(m,n);
     char t; int id;
-	while(cin >> t && t!='E'){
+	while(fin >> t && t!='E'){
 		if(t!='O')
-		   cin >> id;
+		   fin >> id;
         else if(t=='O')
            id=0;
 		Shape b(t,id);      //set shape
