@@ -1,9 +1,5 @@
 #include<iostream>
-#include<stdlib.h>
-#include<fstream>
 using namespace std;
-ifstream fin("Tetris.data");
-ofstream fout("Tetris.output");
 class Shape{
 	public:
 		Shape(char t,int id):type(t),index(id){};	
@@ -26,61 +22,50 @@ class Shape{
 };
 
 int** Build(int r,int c){
-	int** Tetris = new int*[r+3];
-    for(int i=0;i<r+3;i++){
+	int** Tetris = new int*[r];
+    for(int i=0;i<r;i++){
     	Tetris[i] = new int[c];
     	for(int j=0;j<c;j++){
     		Tetris[i][j] = 0;   //init with 0
 		}
 	}return Tetris;
 }
-int Checklines(int **T,int r,int c){
-    int k=(r+3)-1;
-	int i, j,count;
-    int suc=1;
-    for(i=r+3-1;i>=0;i--){
-		count=0;
+void Checklines(int **T,int r,int c){
+    int k=r-1;
+	int i,j;
+	for(i=r-1;i>=0;i--){
+		int count=0;
 		for(j=0;j<c;j++){
 			if(T[i][j]==1) count++;
 			T[k][j] = T[i][j];
 		}
 		if(count<c) k--;
 	}
-	if(i==2 && count==c){ //first line is full
-		for(k;k>=3;k--){ //when k==3
-			for(j=0;j<c;j++)
+	if(i==-1){
+		for (k;k>=0;k--){
+			for (j=0;j<c;j++){
 				T[k][j] = 0;
+			}
 		}
-    }
-    for (k=2; k >= 0;k--){
-        for (j = 0; j < c;j++){
-            if(T[k][j]==1){
-                suc = -1;
-                break;
-                }
-            }
-        if(suc==-1)   break;
-        } 
-    return suc;
+	}
 }
 int ShapeT(int**T,Shape b,int r,int c){
 	int count=0,suc=-1,p=b.getposition()-1;
 	int k,j;
 	switch(b.getindex()){
 		case(1):
-			for(k=0;k<r+3;k++){
+			for(k=0;k<r;k++){
 			    if(count>=1 && T[k][p+1]==0 && T[k-1][p]==0 && T[k-1][p+2]==0){
 					T[k][p+1]=1; T[k-1][p]=1; T[k-1][p+2]=1; count++;
 					if(count>2){
 						T[k-2][p]=0; T[k-2][p+1]=0; T[k-2][p+2]=0;
 					}	
 				}else if(count==0 && T[k][p+1]==0){
-					T[k][p+1]=1; count++;	 				
-				} //1015
-				else break;
-			}if(count>=2) suc=1; break;
+					T[k][p+1]=1; count++;					
+				}else break;
+			}if(count>=2 && k>3) suc=1; break;
 		case(2):
-		    for(k=0;k<r+3;k++){
+		    for(k=0;k<r;k++){
 		        if(count>=1 && T[k][p+1]==0 && T[k-1][p]==0){
 					T[k][p+1]=1; T[k-1][p]=1; count++;
 					if(count==3){
@@ -93,7 +78,7 @@ int ShapeT(int**T,Shape b,int r,int c){
 		        }else break;
 			}if(count>=3) suc=1; break;	
 		case(3):
-		    for(k=0;k<r+3;k++){
+		    for(k=0;k<r;k++){
 		    	if(T[k][p]==0 && T[k][p+1]==0 && T[k][p+2]==0){
 		    		T[k][p]=1; T[k][p+1]=1; T[k][p+2]=1; count++;
 		    		if(count==2){
@@ -104,7 +89,7 @@ int ShapeT(int**T,Shape b,int r,int c){
 				}else break;
 			}if(count>=2) suc=1; break;
 		case(4):
-		    for(k=0;k<r+3;k++){
+		    for(k=0;k<r;k++){
 		        if(count>=1 && T[k][p]==0 && T[k-1][p+1]==0){
 					T[k][p]=1; T[k-1][p+1]=1; count++;
 					if(count==3){
@@ -125,7 +110,7 @@ int ShapeL(int**T,Shape b,int r,int c){
 	int k;
 	switch(b.getindex()){
 		case(1):
-		    for(k=0;k<r+3;k++){
+		    for(k=0;k<r+4;k++){
 				if(T[k][p]==0 && T[k][p+1]==0){
 					T[k][p]=1; T[k][p+1]=1; count++;
 					if(count==2 ||count ==3)
@@ -136,7 +121,7 @@ int ShapeL(int**T,Shape b,int r,int c){
 				}else break;
 			}if(count>=3) suc=1; break;
         case(2):
-		    for(k=0;k<r+3;k++){
+		    for(k=0;k<r+4;k++){
 				if(count>=1 && T[k][p]==0 && T[k-1][p+1]==0 && T[k-1][p+2]==0){
 					T[k][p]=1; T[k-1][p+1]=1; T[k-1][p+2]=1; count++;
 					if(count>2){
@@ -147,7 +132,7 @@ int ShapeL(int**T,Shape b,int r,int c){
 				}else break;	
 			}if(count>=2) suc=1; break;
 		case(3):
-		    for(k=0;k<r+3;k++){
+		    for(k=0;k<r+4;k++){
 				if(count>=2 && T[k][p+1]==0 && T[k-2][p]==0){
 					T[k][p+1]=1; T[k-2][p]=1; count++;
 					if(count>3){
@@ -158,7 +143,7 @@ int ShapeL(int**T,Shape b,int r,int c){
 				}else break;
 			}if(count>=3) suc=1; break;	
 		case(4):
-		    for(k=0;k<r+3;k++){
+		    for(k=0;k<r+4;k++){
 			    if(T[k][p]==0 && T[k][p+1]==0 && T[k][p+2]==0){
 					T[k][p]=1; T[k][p+1]=1; T[k][p+2]=1; count++;
 					if(count>2){
@@ -177,7 +162,7 @@ int ShapeJ(int**T,Shape b,int r,int c){
 	int k;
 	switch(b.getindex()){
 		case(1):
-		    for(k=0;k<r+3;k++){
+		    for(k=0;k<r;k++){
 				if(T[k][p]==0 && T[k][p+1]==0){
 					T[k][p]=1; T[k][p+1]=1; count++;
 					if(count>3){
@@ -187,7 +172,7 @@ int ShapeJ(int**T,Shape b,int r,int c){
 			    }else break;
 			}if(count>=3) suc=1; break;
 		case(2):
-		    for(k=0;k<r+3;k++){
+		    for(k=0;k<r;k++){
 				if(T[k][p]==0 && T[k][p+1]==0 && T[k][p+2]==0){
 					T[k][p]=1; T[k][p+1]=1; T[k][p+2]=1; count++;
 					if(count>2){
@@ -198,7 +183,7 @@ int ShapeJ(int**T,Shape b,int r,int c){
 				}else break;
 			}if(count>=2) suc=1; break;
 		case(3):
-		    for(k=0;k<r+3;k++){
+		    for(k=0;k<r;k++){
 				if(count>=2 && T[k][p]==0 && T[k-2][p+1]==0){
 					T[k][p]=1; T[k-2][p+1]=1; count++;
 					if(count>3){
@@ -209,7 +194,7 @@ int ShapeJ(int**T,Shape b,int r,int c){
 				}else break;
 			}if(count>=3) suc=1; break;
 		case(4):
-		    for(k=0;k<r+3;k++){
+		    for(k=0;k<r;k++){
 				if(count>=1 && T[k][p+2]==0 && T[k-1][p]==0 && T[k-1][p+1]==0){
 					T[k][p+2]=1; T[k-1][p]=1; T[k-1][p+1]=1; count++;
 					if(count>2){
@@ -228,7 +213,7 @@ int ShapeS(int**T,Shape b,int r,int c){
 	int k;
 	switch(b.getindex()){
 		case(1):
-			for(k=0;k<r+3;k++){
+			for(k=0;k<r;k++){
 				if(count>=1 && T[k][p]==0 && T[k][p+1]==0 && T[k-1][p+2]==0){
 					T[k][p]=1; T[k][p+1]=1; T[k-1][p+2]=1; count++;
 					if(count==2) T[k-1][p]=0;
@@ -240,7 +225,7 @@ int ShapeS(int**T,Shape b,int r,int c){
 				}else break;
 			}if(count>=2) suc=1; break;
 		case(2):
-		    for(k=0;k<r+3;k++){
+		    for(k=0;k<r;k++){
 		        if(count>=1 && T[k][p+1]==0 && T[k-1][p]==0){
 					T[k][p+1]=1; T[k-1][p]=1; count++;
 					if(count==3) T[k-2][p+1]=0;
@@ -260,7 +245,7 @@ int ShapeZ(int**T,Shape b,int r,int c){
 	int k;
 	switch(b.getindex()){
 		case(1):
-		    for(k=0;k<r+3;k++){
+		    for(k=0;k<r;k++){
 				if(count>=1 && T[k][p+1]==0 && T[k][p+2]==0 && T[k-1][p]==0){
 					T[k][p+1]=1; T[k][p+2]=1; T[k-1][p]=1; count++;
 					if(count==2) T[k-1][p+2]=0;
@@ -272,7 +257,7 @@ int ShapeZ(int**T,Shape b,int r,int c){
 				}else break;
 			}if(count>=2) suc=1; break;
 		case(2):
-		    for(k=0;k<r+3;k++){
+		    for(k=0;k<r;k++){
 				if(count>=1 && T[k][p]==0 && T[k-1][p+1]==0){
 					T[k][p]=1; T[k-1][p+1]=1; count++;
 					if(count==3) T[k-2][p]=0;
@@ -292,7 +277,7 @@ int ShapeI(int**T,Shape b,int r,int c){
 	int k,j;
 	switch(b.getindex()){
 		case(1):
-			for(k=0;k<r+3;k++){
+			for(k=0;k<r;k++){
 			    if(T[k][p]==0){
 				   if(count < 4){
 					  T[k][p]=1;  count++;     
@@ -302,7 +287,7 @@ int ShapeI(int**T,Shape b,int r,int c){
 			    }else break;
 		    }if(count==4) suc=1; break;//all blks in matrix,count=4,success	
 		case(2):
-		     for(k=0;k<r+3;k++){
+		     for(k=0;k<r;k++){
 			     if(T[k][p]==0 && T[k][p+1]==0 && T[k][p+2]==0 && T[k][p+3]==0){
 				    count =1;
 				    for(j=p;j<p+4;j++){
@@ -317,7 +302,7 @@ int ShapeI(int**T,Shape b,int r,int c){
 }
 int ShapeO(int**T,Shape b,int r,int c){
 	int count=0,p=b.getposition()-1,suc=-1;
-	for(int k=0;k<r+3;k++){
+	for(int k=0;k<r;k++){
 	    if(T[k][p]==0 && T[k][p+1]==0 ){
 	    	if(count<2){
 	    	    T[k][p]=1; T[k][p+1]=1;
@@ -331,17 +316,16 @@ int ShapeO(int**T,Shape b,int r,int c){
 	return suc;
 }
 void ShowT(int **T,int r,int c){
-	for(int i=3;i<r+3;i++){
+	for(int i=0;i<r;i++){
 		for(int j=0;j<c;j++){
-			fout << T[i][j] ;
+			cout << T[i][j] ;
 		}
-		fout << endl;
+		cout << endl;
 	}
-	fout.close();
 }
 int Move(int **T,Shape b,int r,int c){
 	int p,success=-1;
-	fin >> p ; b.setposition(p);
+	cin >> p ; b.setposition(p);
 	switch(b.gettype()){
 		case('T'):
 			success = ShapeT(T,b,r,c);	break;
@@ -359,25 +343,17 @@ int Move(int **T,Shape b,int r,int c){
 	    	success = ShapeO(T,b,r,c);	break;	
 		default: break;		
 	}
-	success = Checklines(T,r,c);
+	Checklines(T,r,c);
 	return success;	
 }
 int main(){
-	if(!fin){ //check file
-		cout << "Filein error!";
-		exit(1);
-	}
-	if(!fout){
-		cout << "Fileout error!";
-		exit(1);
-	}
 	int m,n,success=-1;
-	fin >> m >> n ;     //row,column
+	cin >> m >> n ;     //row,column
     int **T = Build(m,n);
     char t; int id;
-	while(fin >> t && t!='E'){
+	while(cin >> t && t!='E'){
 		if(t!='O')
-		   fin >> id;
+		   cin >> id;
         else if(t=='O')
            id=0;
 		Shape b(t,id);      //set shape
