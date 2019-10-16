@@ -56,8 +56,8 @@ int Checklines(int **T,int r,int c){
         } 
     return suc;
 }
-int ShapeT(int**T,Shape b,int r,int c){
-	int count=0,suc=-1,p=b.getposition()-1;
+void ShapeT(int**T,Shape b,int r,int c){
+	int count=0,p=b.getposition()-1;
 	int k,j;
 	switch(b.getindex()){
 		case(1):
@@ -69,9 +69,9 @@ int ShapeT(int**T,Shape b,int r,int c){
 					}	
 				}else if(count==0 && T[k][p+1]==0){
 					T[k][p+1]=1; count++;	 				
-				} //1015
+				}
 				else break;
-			}if(count>=2) suc=1; break;
+			}break;
 		case(2):
 		    for(k=0;k<r+4;k++){
 		        if(count>=1 && T[k][p+1]==0 && T[k-1][p]==0){
@@ -84,7 +84,7 @@ int ShapeT(int**T,Shape b,int r,int c){
 				}else if(count==0 && T[k][p+1]==0){
 		    		T[k][p+1]=1; count++;
 		        }else break;
-			}if(count>=3) suc=1; break;	
+			}break;	
 		case(3):
 		    for(k=0;k<r+4;k++){
 		    	if(T[k][p]==0 && T[k][p+1]==0 && T[k][p+2]==0){
@@ -95,7 +95,7 @@ int ShapeT(int**T,Shape b,int r,int c){
 					   T[k-1][p]=0; T[k-1][p+2]=0; T[k-2][p+1]=0;
 					}	
 				}else break;
-			}if(count>=2) suc=1; break;
+			}break;
 		case(4):
 		    for(k=0;k<r+4;k++){
 		        if(count>=1 && T[k][p]==0 && T[k-1][p+1]==0){
@@ -108,13 +108,13 @@ int ShapeT(int**T,Shape b,int r,int c){
 				}else if(count==0 && T[k][p]==0){
 		            T[k][p]=1; count++;
 				}else break;
-			}if (count>=3) suc=1; break;
+			}break;
 		default:
 		    break;			
-	}return suc;
+	}
 }
-int ShapeL(int**T,Shape b,int r,int c){
-	int count=0,p=b.getposition()-1,suc=-1;
+void ShapeL(int**T,Shape b,int r,int c){
+	int count=0,p=b.getposition()-1;
 	int k;
 	switch(b.getindex()){
 		case(1):
@@ -127,7 +127,7 @@ int ShapeL(int**T,Shape b,int r,int c){
 						T[k-1][p+1]=0; T[k-3][p]=0;
 					} 
 				}else break;
-			}if(count>=3) suc=1; break;
+			}break;
         case(2):
 		    for(k=0;k<r+4;k++){
 				if(count>=1 && T[k][p]==0 && T[k-1][p+1]==0 && T[k-1][p+2]==0){
@@ -138,7 +138,7 @@ int ShapeL(int**T,Shape b,int r,int c){
 				}else if(count==0 && T[k][p]==0){
 					T[k][p]=1; count++;
 				}else break;	
-			}if(count>=2) suc=1; break;
+			}break;
 		case(3):
 		    for(k=0;k<r+4;k++){
 				if(count>=2 && T[k][p+1]==0 && T[k-2][p]==0){
@@ -149,7 +149,7 @@ int ShapeL(int**T,Shape b,int r,int c){
 				}else if(count<2 && T[k][p+1]==0){
 					T[k][p+1]=1; count++;
 				}else break;
-			}if(count>=3) suc=1; break;	
+			}break;	
 		case(4):
 		    for(k=0;k<r+4;k++){
 			    if(T[k][p]==0 && T[k][p+1]==0 && T[k][p+2]==0){
@@ -160,13 +160,13 @@ int ShapeL(int**T,Shape b,int r,int c){
 						T[k-1][p]=0; T[k-1][p+1]=0;
 					}
 				}else break;
-			}if(count>=2) suc=1; break;	
+			}break;	
 		default:
 		    break;	
-	}return suc;
+	}
 }
-int ShapeJ(int**T,Shape b,int r,int c){
-	int count=0,p=b.getposition()-1,suc=-1;
+void ShapeJ(int**T,Shape b,int r,int c){
+	int count=0,p=b.getposition()-1;
 	int k;
 	switch(b.getindex()){
 		case(1):
@@ -178,7 +178,7 @@ int ShapeJ(int**T,Shape b,int r,int c){
 					}else if(count==2 || count==3)
 					    T[k-1][p]=0;
 			    }else break;
-			}if(count>=3) suc=1; break;
+			}break;
 		case(2):
 		    for(k=0;k<r+4;k++){
 				if(T[k][p]==0 && T[k][p+1]==0 && T[k][p+2]==0){
@@ -189,7 +189,7 @@ int ShapeJ(int**T,Shape b,int r,int c){
 						T[k-1][p+1]=0; T[k-1][p+2]=0;
 					}
 				}else break;
-			}if(count>=2) suc=1; break;
+			}break;
 		case(3):
 		    for(k=0;k<r+4;k++){
 				if(count>=2 && T[k][p]==0 && T[k-2][p+1]==0){
@@ -200,7 +200,7 @@ int ShapeJ(int**T,Shape b,int r,int c){
 				}else if(count<2 && T[k][p]==0){
 					T[k][p]=1; count++;
 				}else break;
-			}if(count>=3) suc=1; break;
+			}break;
 		case(4):
 		    for(k=0;k<r+4;k++){
 				if(count>=1 && T[k][p+2]==0 && T[k-1][p]==0 && T[k-1][p+1]==0){
@@ -211,13 +211,13 @@ int ShapeJ(int**T,Shape b,int r,int c){
 				}else if(count==0 && T[k][p+2]==0){
 					T[k][p+2]=1; count++;
 				}else break;
-			}if(count>=2) suc=1; break;	
+			}break;	
 		default:
 		    break;		
-	}return suc;
+	}
 }
-int ShapeS(int**T,Shape b,int r,int c){
-	int count=0,p=b.getposition()-1,suc=-1;
+void ShapeS(int**T,Shape b,int r,int c){
+	int count=0,p=b.getposition()-1;
 	int k;
 	switch(b.getindex()){
 		case(1):
@@ -231,7 +231,7 @@ int ShapeS(int**T,Shape b,int r,int c){
 				}else if(count==0 && T[k][p]==0 && T[k][p+1]==0){
 					T[k][p]=1; T[k][p+1]=1; count++;
 				}else break;
-			}if(count>=2) suc=1; break;
+			}break;
 		case(2):
 		    for(k=0;k<r+4;k++){
 		        if(count>=1 && T[k][p+1]==0 && T[k-1][p]==0){
@@ -243,13 +243,13 @@ int ShapeS(int**T,Shape b,int r,int c){
 				}else if(count==0 && T[k][p+1]==0){
 		    		T[k][p+1]=1; count++;
 				}else break;
-			}if(count>=3) suc=1; break;	
+			}break;	
 		default:
 		    break;	
-	}return suc;
+	}
 }
-int ShapeZ(int**T,Shape b,int r,int c){
-	int count=0,p=b.getposition()-1,suc=-1;
+void ShapeZ(int**T,Shape b,int r,int c){
+	int count = 0, p = b.getposition() - 1;
 	int k;
 	switch(b.getindex()){
 		case(1):
@@ -263,7 +263,7 @@ int ShapeZ(int**T,Shape b,int r,int c){
 				}else if(count==0 && T[k][p+1]==0 && T[k][p+2]==0){
 					T[k][p+1]=1; T[k][p+2]=1; count++;
 				}else break;
-			}if(count>=2) suc=1; break;
+			}break;
 		case(2):
 		    for(k=0;k<r+4;k++){
 				if(count>=1 && T[k][p]==0 && T[k-1][p+1]==0){
@@ -275,13 +275,13 @@ int ShapeZ(int**T,Shape b,int r,int c){
 				}else if(count==0 && T[k][p]==0){
 					T[k][p]=1; count++;
 				}else break;
-			}if(count>=3) suc=1; break;
+			}break;
 		default:
 		    break;	
-	}return suc;
+	}
 }
-int ShapeI(int**T,Shape b,int r,int c){ 
-	int count=0,suc=-1,p=b.getposition()-1;
+void ShapeI(int**T,Shape b,int r,int c){ 
+	int count=0,p=b.getposition()-1;
 	int k,j;
 	switch(b.getindex()){
 		case(1):
@@ -293,7 +293,7 @@ int ShapeI(int**T,Shape b,int r,int c){
 					T[k][p] = 1;
 					T[k-count][p]= 0; }
 			    }else break;
-		    }if(count==4) suc=1; break;//all blks in matrix,count=4,success	
+		    }break;
 		case(2):
 		     for(k=0;k<r+4;k++){
 			     if(T[k][p]==0 && T[k][p+1]==0 && T[k][p+2]==0 && T[k][p+3]==0){
@@ -303,13 +303,13 @@ int ShapeI(int**T,Shape b,int r,int c){
 					    if(k>0) T[k-1][j]=0;
 				    }
 			      }else break;
-		     }if(count==1) suc=1;  break; //all blks in matrix,success	
+		     }break;
 	    default:
 		    break;	
-	}return suc;
+	}
 }
-int ShapeO(int**T,Shape b,int r,int c){
-	int count=0,p=b.getposition()-1,suc=-1;
+void ShapeO(int**T,Shape b,int r,int c){
+	int count=0,p=b.getposition()-1;
 	for(int k=0;k<r+4;k++){
 	    if(T[k][p]==0 && T[k][p+1]==0 ){
 	    	if(count<2){
@@ -320,8 +320,7 @@ int ShapeO(int**T,Shape b,int r,int c){
 	        	T[k-2][p]=0; T[k-2][p+1]=0;
 			}
 		}else break;
-	}if(count==2) suc=1;
-	return suc;
+	}
 }
 void ShowT(int **T,int r,int c){
 	for(int i=4;i<r+4;i++){
@@ -337,19 +336,19 @@ int Move(int **T,Shape b,int r,int c){
 	fin >> p ; b.setposition(p);
 	switch(b.gettype()){
 		case('T'):
-			success = ShapeT(T,b,r,c);	break;
+			ShapeT(T,b,r,c); break;
 		case('L'):
-		    success = ShapeL(T,b,r,c);  break;
+		    ShapeL(T,b,r,c); break;
 		case('J'):
-		    success = ShapeJ(T,b,r,c); break;		
+		    ShapeJ(T,b,r,c); break;		
 		case('S'):
-			success = ShapeS(T,b,r,c);  break;
+			ShapeS(T,b,r,c); break;
 		case('Z'):
-		    success = ShapeZ(T,b,r,c); break;
+		    ShapeZ(T,b,r,c); break;
 		case('I'):
-		    success = ShapeI(T,b,r,c);	break;
+		    ShapeI(T,b,r,c); break;
 	    case('O'):
-	    	success = ShapeO(T,b,r,c);	break;	
+	    	ShapeO(T,b,r,c); break;	
 		default: break;		
 	}
 	success = Checklines(T,r,c);
