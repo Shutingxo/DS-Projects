@@ -24,9 +24,8 @@ class Shape{
 		int index; 
 		int pos;
 };
-
 int** Build(int r,int c){
-	int** Tetris = new int*[r+3];
+	int** Tetris = new int*[r+4];
     for(int i=0;i<r+4;i++){
     	Tetris[i] = new int[c];
     	for(int j=0;j<c;j++){
